@@ -1,0 +1,24 @@
+package name.codegen;
+
+import java.util.List;
+
+public class ArduinoData {
+    private Wifi wifi;
+    private List<PinData> settings;
+
+    public Wifi getWifi() {
+        return wifi;
+    }
+
+    public void setWifi(Wifi wifi) {
+        this.wifi = wifi;
+    }
+
+    public List<PinData> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(List<PinData> settings) {
+        this.settings = settings;
+    }
+}
