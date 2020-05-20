@@ -1,0 +1,41 @@
+{
+  "wifi": {
+    "auth": "Your code",
+    "ssid": "Your ssid",
+    "password": "Your password"
+     },  
+  "settings": [
+    {
+      "pin": "5",
+      "vpin": "V0"
+    },
+    {
+      "pin": "4",
+      "vpin": "V1"
+    },
+    {
+      "pin": "0",
+      "vpin": "V2"
+    },
+    {
+      "pin": "2",
+      "vpin": "V3"
+    },
+    {
+      "pin": "14",
+      "vpin": "V4"
+    },
+    {
+      "pin": "12",
+      "vpin": "V5"
+    },
+    {
+      "pin": "13",
+      "vpin": "V6"
+    },
+    {
+      "pin": "15",
+      "vpin": "V7"
+    }
+  ]
+}
