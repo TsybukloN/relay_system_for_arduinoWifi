@@ -1,0 +1,82 @@
+import com.fasterxml.jackson.databind.ObjectMapper; //library
+import name.codegen.ArduinoData;
+import name.codegen.PinData;
+import name.codegen.Wifi;
+ 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class Main {
+    public static void main(String[] args)  {
+        ArduinoData data = readFile();
+        if (data != null) {
+            generateFie(data);
+        }
+    }
+
+    private static void generateFie(ArduinoData data) {
+        File doc = new File("Filename.ino");
+        try {
+            doc.createNewFile();
+            FileWriter myWriter = new FileWriter("Filename.ino");
+
+            myWriter.write("#include <WiFiUdp.h> \n");
+            myWriter.write("#include <ESP8266WiFi.h> \n");
+            myWriter.write("#include <BlynkSimpleEsp8266.h> \n");
+            myWriter.write("#include <ESP8266mDNS.h> \n");
+            myWriter.write("#include <ArduinoOTA.h> \n");
+
+            myWriter.write("\n");
+
+            myWriter.write("#define BLYNK_PRINT Serial \n");
+
+            myWriter.write("\n");
+
+
+            myWriter.write("void setup() { \n");
+            for (Wifi wifi : data.getWifi()) {
+                myWriter.write("Blynk.begin(" + wifi.getAuth() + "," + wifi.getSsid() + "," + wifi.getPassword() +  "); \n");
+            }
+            myWriter.write("ArduinoOTA.begin(); \n");
+
+            myWriter.write("\n");
+
+            for (PinData pinData : data.getSettings()) {
+                myWriter.write(pinData.getPin() + ", OUTPUT); \n");
+            }
+
+            myWriter.write("} \n");
+            myWriter.write("\n");
+
+            for (PinData pinData : data.getSettings()) {
+                myWriter.write("BlynkWrite(" + pinData.getVpin() + ") {\n");
+                myWriter.write("  if (param.asInt()) { \n");
+                myWriter.write("    digitalWrite(" + pinData.getPin() + ", HIGH); \n");
+                myWriter.write("  } else { \n");
+                myWriter.write("    digitalWrite(" + pinData.getPin() + ", LOW); \n");
+                myWriter.write("  } \n");
+                myWriter.write("}\n");
+            }
+
+            myWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static ArduinoData readFile() {
+        ArduinoData data = null;
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = Main.class.getResourceAsStream("/scratch.json");
+            data = mapper.readValue(is, ArduinoData.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+}
